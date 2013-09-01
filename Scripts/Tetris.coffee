@@ -1,30 +1,17 @@
 context  = null
 canvas = null
-gridMaxX = 6
-gridMaxY = 20
+gridMaxX = 16
+gridMaxY = 30
 current = null
 showGrid = 0
 
-cubeTemplate = {
-  color:"red",
-  path:[]
-}
-cubeTemplate.path.push {
-  x: 0,
-  y :0
-}
-cubeTemplate.path.push {
-  x: 1,
-  y :0
-}
-cubeTemplate.path.push {
-  x:0,
-  y:1
-}
-cubeTemplate.path.push {
-  x:1,
-  y:1
-}
+templates = [{color:"red",name:"cube", path:[{x:0,y :0},{x:1,y:0},{x:0,y:1},{x:1,y:1}]}, #cube
+             {color:"yellow",name:"line", path:[{x:0,y :0},{x:0,y:1},{x:0,y:2},{x:0,y:3}]}, #line
+             {color:"blue",name:"L", path:[{x:0,y :0},{x:0,y:1},{x:0,y:2},{x:1,y:2}]},#L
+             {color:"pink",name:"otherL", path:[{x:0,y :0},{x:0,y:1},{x:0,y:2},{x:-1,y:2}]},# the other L
+             {color:"grey",name:"S", path:[{x:0,y :0},{x:1,y:0},{x:1,y:1},{x:2,y:1}]},#s
+             {color:"black",name:"otherS", path:[{x:0,y :0},{x:-1,y:0},{x:-1,y:1},{x:-2,y:1}]},# the other s
+             {color:"orange",name:"T", path:[{x:0,y :0},{x:1,y:0},{x:0,y:1},{x:0,y:-1}]}]# T
 
 grid =
 {
@@ -43,14 +30,14 @@ grid =
 }
 
 getNewBlock = ->
+  template = Math.floor(Math.random() * 6)
+  console.log template
   current = {
     x : gridMaxX / 2
     y : -1
-    template : cubeTemplate
+    template : templates[template]
   }
-
   return
-
 
 window.onload = ->
   canvas = document.createElement 'canvas'
@@ -91,12 +78,10 @@ play = ->
 updateGrid = (element) ->
   grid.occuped.push (x:element.x + item.x,y:element.y + item.y,color:element.template.color) for item in element.template.path
   #Remove full lines
-  fullLines = []
   for currentLine in [0..gridMaxY]
     dummy = 'I am useless but my poor developper still doesn\'t know how to do it better way'
     liste = (dummy for state in grid.occuped when currentLine == state.y )
     if liste.length == gridMaxX
-      fullLines.push currentLine
       grid.occuped = grid.occuped.filter (item) -> item.y isnt currentLine
       for item in grid.occuped when item.y < currentLine
         do =>
@@ -131,20 +116,16 @@ move = (element,x,y) ->
     current.y += y
   return canMove
 
+#rotate = (element) ->
+
 document.onkeydown = (t) ->
   if t.keyCode == 37
-      move(current,-1,0)
+    move(current,-1,0)
   if t.keyCode == 39
-      move(current,1,0)
-
+    move(current,1,0)
+  if t.keyCode == 40
+    move(current,0,1)
+  if t.keyCode == 32
+    rotate(current)
   return
-
-GetChar = (event) ->
-  if 'which' in event
-    event.which
-   else
-    event.keyCode;
-
-
-
 
