@@ -7,9 +7,9 @@
 
   canvas = null;
 
-  gridMaxX = 10;
+  gridMaxX = 6;
 
-  gridMaxY = 40;
+  gridMaxY = 20;
 
   current = null;
 
@@ -122,7 +122,8 @@
   };
 
   updateGrid = function(element) {
-    var item, _i, _len, _ref;
+    var currentLine, dummy, fullLines, item, liste, state, _i, _j, _k, _len, _len1, _ref, _ref1,
+      _this = this;
     _ref = element.template.path;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       item = _ref[_i];
@@ -132,6 +133,38 @@
         color: element.template.color
       });
     }
+    fullLines = [];
+    for (currentLine = _j = 0; 0 <= gridMaxY ? _j <= gridMaxY : _j >= gridMaxY; currentLine = 0 <= gridMaxY ? ++_j : --_j) {
+      dummy = 'I am useless but my poor developper still doesn\'t know how to do it better way';
+      liste = (function() {
+        var _k, _len1, _ref1, _results;
+        _ref1 = grid.occuped;
+        _results = [];
+        for (_k = 0, _len1 = _ref1.length; _k < _len1; _k++) {
+          state = _ref1[_k];
+          if (currentLine === state.y) {
+            _results.push(dummy);
+          }
+        }
+        return _results;
+      })();
+      if (liste.length === gridMaxX) {
+        fullLines.push(currentLine);
+        grid.occuped = grid.occuped.filter(function(item) {
+          return item.y !== currentLine;
+        });
+        _ref1 = grid.occuped;
+        for (_k = 0, _len1 = _ref1.length; _k < _len1; _k++) {
+          item = _ref1[_k];
+          if (item.y < currentLine) {
+            (function() {
+              return item.y += 1;
+            })();
+          }
+        }
+      }
+    }
+    console.log(fullLines.length);
   };
 
   moveDown = function(element) {
@@ -145,7 +178,7 @@
 
   checkItem = function(x, y) {
     var dummy, list, state;
-    dummy = 'found';
+    dummy = 'I am useless but my poor developper doesn\'t know how to do it better way';
     if (y < gridMaxY && x >= 0 && x < gridMaxX) {
       list = (function() {
         var _i, _len, _ref, _results;

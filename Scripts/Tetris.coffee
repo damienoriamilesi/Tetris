@@ -1,7 +1,7 @@
 context  = null
 canvas = null
-gridMaxX = 10
-gridMaxY = 40
+gridMaxX = 6
+gridMaxY = 20
 current = null
 showGrid = 0
 
@@ -90,6 +90,18 @@ play = ->
 
 updateGrid = (element) ->
   grid.occuped.push (x:element.x + item.x,y:element.y + item.y,color:element.template.color) for item in element.template.path
+  #Remove full lines
+  fullLines = []
+  for currentLine in [0..gridMaxY]
+    dummy = 'I am useless but my poor developper still doesn\'t know how to do it better way'
+    liste = (dummy for state in grid.occuped when currentLine == state.y )
+    if liste.length == gridMaxX
+      fullLines.push currentLine
+      grid.occuped = grid.occuped.filter (item) -> item.y isnt currentLine
+      for item in grid.occuped when item.y < currentLine
+        do =>
+          item.y += 1
+  console.log fullLines.length
   return
 
 moveDown = (element) ->
@@ -100,7 +112,7 @@ moveDown = (element) ->
 
 #check still in the grid ans nothing on the way
 checkItem = (x,y) ->
-  dummy = 'found'  #maybe a better way, but i'm a noob in coffee
+  dummy = 'I am useless but my poor developper doesn\'t know how to do it better way'  #maybe a better way, but i'm a noob in coffee
   if y < gridMaxY and x >= 0 and x < gridMaxX #still in the grid
     list = (dummy for state in grid.occuped when x == state.x and y == state.y )
     if list.length == 0 #nothing's already there
