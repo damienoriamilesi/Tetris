@@ -13,6 +13,14 @@ templates = [{color:"red",name:"cube", path:[{x:0,y :0},{x:1,y:0},{x:0,y:1},{x:1
              {color:"black",name:"otherS", path:[{x:0,y :0},{x:-1,y:0},{x:-1,y:1},{x:-2,y:1}]},# the other s
              {color:"orange",name:"T", path:[{x:0,y :0},{x:1,y:0},{x:0,y:1},{x:0,y:-1}]}]# T
 
+rotateLeft = (path) ->
+  for point in path
+    x = point.y
+    y = -point.x
+    point.x = x
+    point.y = y
+  path
+
 grid =
 {
   occuped:[]
